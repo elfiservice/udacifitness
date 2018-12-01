@@ -1,6 +1,11 @@
 import React from 'react';
 import { StyleSheet, View, Platform, StatusBar } from 'react-native';
-import { createBottomTabNavigator, createMaterialTopTabNavigator, createAppContainer } from 'react-navigation'
+import { 
+    createBottomTabNavigator, 
+    createMaterialTopTabNavigator, 
+    createAppContainer,
+    createStackNavigator
+} from 'react-navigation'
 
 import { createStore } from 'redux'
 import { Provider } from 'react-redux'
@@ -11,6 +16,7 @@ import History from './components/History'
 import { purple, white } from './utils/colors'
 import { FontAwesome, Ionicons } from '@expo/vector-icons'
 import { Constants } from 'expo'
+import EntryDetail from './components/EntryDetail'
 
 function UdaciStatusBar ({backgroundColor, ...props}) {
   return (
@@ -61,7 +67,26 @@ const Tabs = Platform.OS === "ios"
   ? createBottomTabNavigator(RouteConfigs, TabNavigatorConfig)
   : createMaterialTopTabNavigator(RouteConfigs, TabNavigatorConfig);
 
-const TabsContainer = createAppContainer(Tabs)
+
+const MainNavigator = createStackNavigator({
+    home: {
+      screen: Tabs,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    EntryDetail: {
+      screen: EntryDetail,
+      navigationOptions: ({ navigation }) => ({
+        headerTintColor: white,
+        headerStyle: {
+          backgroundColor: purple,
+        },
+      }),
+    },
+  });
+
+const TabsContainer = createAppContainer(MainNavigator)
 
 export default class App extends React.Component {
   render() {
